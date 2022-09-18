@@ -1,4 +1,4 @@
-const functions = { visit }
+const functions = { click }
 
 export function handle(state, action) {
   if (Object.keys(functions).includes(action.input.function)) {
@@ -7,7 +7,7 @@ export function handle(state, action) {
   throw new ContractError('function not defined!')
 }
 
-function visit(state, action) {
-  state.views = state.views + 1;
+function click(state, action) {
+  state.clicks = state.clicks + 1;
   return { state }
 }

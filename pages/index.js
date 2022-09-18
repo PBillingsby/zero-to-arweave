@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { useState } from 'react'
 import Arweave from "arweave";
 import { WarpFactory } from 'warp-contracts'
 
@@ -9,17 +10,31 @@ const arweave = Arweave.init({
   protocol: "https"
 })
 
-const CONTRACT_SRC = "KNuF1-S_5vd0mrPc1X2CDCvaC-3cbK8Y476aXYQ5QkI"
+const CONTRACT_SRC = "FR2irQXRvXL2MC5aHoNSNcCW_LZYmyE50xNFtISb5AI"
 
 export default function Home() {
+  const [clicks, setClicks] = useState();
   const warp = WarpFactory.forMainnet();
   const contract = warp.contract(CONTRACT_SRC).connect();
-  const handleClick = async () => {
+  const getClicks = async () => {
     const { cachedValue } = await contract.readState();
 
-    console.log('state: ', cachedValue)
-    alert("CLICKED")
+    setClicks(cachedValue.state.clicks)
   }
+
+  const addClick = async () => {
+    try {
+      setClicks('updating...')
+      await contract.writeInteraction({
+        function: "click",
+      })
+      getClicks()
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -29,7 +44,13 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <button onClick={handleClick}>Click Me</button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button onClick={getClicks}>Get clicks</button>
+          <button onClick={addClick}>Add View</button>
+        </div>
+        <div>
+          {clicks && <p>{clicks} clicks</p>}
+        </div>
       </main>
     </div>
   )
