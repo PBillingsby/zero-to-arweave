@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "node contract/deploy.mjs"
   },
   "dependencies": {
     "arweave": "^1.11.6",
