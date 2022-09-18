@@ -1,28 +1,23 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useState } from 'react'
-import Arweave from "arweave";
 import { WarpFactory } from 'warp-contracts'
 
-const arweave = Arweave.init({
-  host: "arweave.net",
-  port: 443,
-  protocol: "https"
-})
-
+// Replace with your own
 const CONTRACT_SRC = "FR2irQXRvXL2MC5aHoNSNcCW_LZYmyE50xNFtISb5AI"
 
 export default function Home() {
   const [clicks, setClicks] = useState();
   const warp = WarpFactory.forMainnet();
   const contract = warp.contract(CONTRACT_SRC).connect();
+  // Reads contract state and sets `clicks` variable
   const getClicks = async () => {
     const { cachedValue } = await contract.readState();
-
     setClicks(cachedValue.state.clicks)
   }
 
   const addClick = async () => {
+    // 
     try {
       setClicks('updating...')
       await contract.writeInteraction({
