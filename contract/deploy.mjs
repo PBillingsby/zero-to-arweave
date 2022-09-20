@@ -1,12 +1,15 @@
 import fs from 'fs'
 import { WarpFactory } from 'warp-contracts'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 export async function deploy() {
   // Creating local || mainnet Warp instance
-  const warp = process.env.NODE_ENV === "development" ? WarpFactory.forLocal() : WarpFactory.forMainnet();
+  const isLocal = process.env.WARP === "local"
+  const warp = isLocal ? WarpFactory.forLocal() : WarpFactory.forMainnet();
   // Creating test wallet || importing Arweave wallet from root
   let wallet
-  if (process.env.NODE_ENV === "development") {
+  if (isLocal) {
     const testWallet = await warp.testing.generateWallet()
     wallet = testWallet.jwk
   }
