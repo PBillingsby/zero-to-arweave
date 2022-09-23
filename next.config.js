@@ -8,7 +8,7 @@ const nextConfig = {
       "/": { page: "/" }
     };
   },
-  assetPrefix: './',
+  assetPrefix: './'
 }
 
 module.exports = nextConfig

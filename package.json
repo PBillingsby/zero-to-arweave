@@ -7,17 +7,23 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "node contract/deploy.mjs"
+    "deploy": "node contract/deploy.mjs",
+    "test": "uvu ./tests"
   },
   "dependencies": {
+    "arlocal": "^1.1.58",
     "arweave": "^1.11.6",
+    "dotenv": "^16.0.2",
     "next": "12.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "warp-contracts": "^1.2.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.1",
     "eslint": "8.23.1",
-    "eslint-config-next": "12.3.0"
+    "eslint-config-next": "12.3.0",
+    "esm": "^3.2.25",
+    "uvu": "^0.5.6"
   }
 }

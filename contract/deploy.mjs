@@ -1,11 +1,22 @@
 import fs from 'fs'
 import { WarpFactory } from 'warp-contracts'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-async function deploy() {
-  // Creating a mainnet Warp instance
-  const warp = WarpFactory.forMainnet();
-  // Importing what is needed for the initial deployment
-  const wallet = JSON.parse(fs.readFileSync('wallet.json', 'utf-8'))
+export async function deploy() {
+  // Creating local || mainnet Warp instance
+  const isLocal = process.env.WARP === "local"
+  const warp = isLocal ? WarpFactory.forLocal() : WarpFactory.forMainnet();
+  // Creating test wallet || importing Arweave wallet from root
+  let wallet
+  if (isLocal) {
+    const testWallet = await warp.testing.generateWallet()
+    wallet = testWallet.jwk
+  }
+  else {
+    wallet = JSON.parse(fs.readFileSync('wallet.json', 'utf-8'))
+  }
+  // Importing the smart contract
   const contractSource = fs.readFileSync('contract/contract.js', 'utf-8')
 
   // Setting contract initState & Deploying first contract
@@ -22,10 +33,10 @@ async function deploy() {
   await contract.writeInteraction({
     function: 'click'
   })
+
   // Reading and abstracting contract state
   const { cachedValue } = await contract.readState()
 
-  console.log('Contract state: ', cachedValue)
-  console.log('contractTxId: ', contractTxId)
+  return { contractTxId, cachedValue }
 }
 deploy()
